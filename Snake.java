@@ -16,6 +16,8 @@ public class Snake {
         snakeParts.add(new GameObject(x,y));
         snakeParts.add(new GameObject(x+1,y));
         snakeParts.add(new GameObject(x+2,y));
+        snakeParts.add(new GameObject(x+3,y));
+        snakeParts.add(new GameObject(x+4,y));
     }
     public void draw(Game game) {
         for (int i = 0; i < snakeParts.size(); i++) {
@@ -27,3 +29,4 @@ public class Snake {
         }
     }
 }
+
