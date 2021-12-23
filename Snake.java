@@ -75,3 +75,4 @@ public class Snake {
         this.direction = direction;
     }
 }
+
