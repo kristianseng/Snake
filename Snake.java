@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Snake {
 
-    private final static String HEAD_SIGN = "\uD83D\uDC7E";
-    private final static String BODY_SIGN = "\u26AB";
+    private static final String HEAD_SIGN = "\uD83D\uDC7E";
+    private static final String BODY_SIGN = "\u26AB";
 
     private List<GameObject> snakeParts = new ArrayList<>();
     public boolean isAlive = true;
@@ -30,6 +30,23 @@ public class Snake {
         }
     }
 
+    public void setDirection(Direction direction) {
+        if ((this.direction == Direction.LEFT || this.direction == Direction.RIGHT) && snakeParts.get(0).x == snakeParts.get(1).x) {
+            return;
+        }
+        if ((this.direction == Direction.UP || this.direction == Direction.DOWN) && snakeParts.get(0).y == snakeParts.get(1).y) {
+            return;
+        }
+
+        if ((direction == Direction.UP && this.direction == Direction.DOWN)
+                || (direction == Direction.LEFT && this.direction == Direction.RIGHT)
+                || (direction == Direction.RIGHT && this.direction == Direction.LEFT)
+                || (direction == Direction.DOWN && this.direction == Direction.UP))
+            return;
+
+        this.direction = direction;
+    }
+
     public void move(Apple apple) {
         GameObject newHead = createNewHead();
         if (newHead.x >= SnakeGame.WIDTH
@@ -39,40 +56,55 @@ public class Snake {
             isAlive = false;
             return;
         }
-        if(newHead.x == apple.x && newHead.y == apple.y) {
-            apple.isAlive = false;
-            snakeParts.add(0, newHead);
+
+        if (checkCollision(newHead)) {
+            isAlive = false;
             return;
         }
+
         snakeParts.add(0, newHead);
-        removeTail();
+
+        if (newHead.x == apple.x && newHead.y == apple.y) {
+            apple.isAlive = false;
+        } else {
+            removeTail();
+        }
     }
 
     public GameObject createNewHead() {
-        GameObject oldHead = snakeParts.get(0);
+        GameObject head = snakeParts.get(0);
+        int headX = head.x;
+        int headY = head.y;
+        int newHeadX = headX;
+        int newHeadY = headY;
         if (direction == Direction.LEFT) {
-            return new GameObject(oldHead.x - 1, oldHead.y);
+            newHeadX--;
         } else if (direction == Direction.RIGHT) {
-            return new GameObject(oldHead.x + 1, oldHead.y);
+            newHeadX++;
         } else if (direction == Direction.UP) {
-            return new GameObject(oldHead.x, oldHead.y - 1);
+            newHeadY--;
         } else {
-            return new GameObject(oldHead.x, oldHead.y + 1);
+            newHeadY++;
         }
+
+        return new GameObject(newHeadX, newHeadY);
     }
 
     public void removeTail() {
         snakeParts.remove(snakeParts.size() - 1);
     }
 
-    public void setDirection(Direction direction) {
-        if ((direction == Direction.UP && this.direction == Direction.DOWN)
-                || (direction == Direction.LEFT && this.direction == Direction.RIGHT)
-                || (direction == Direction.RIGHT && this.direction == Direction.LEFT)
-                || (direction == Direction.DOWN && this.direction == Direction.UP))
-            return;
+    public boolean checkCollision(GameObject gameObject) {
+        for (GameObject part : snakeParts) {
+            if (part.x == gameObject.x && part.y == gameObject.y) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        this.direction = direction;
+    public int getLength() {
+        return snakeParts.size();
     }
 }
 
