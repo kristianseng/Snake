@@ -6,11 +6,13 @@ Java replica of the game "Snake"
 
 
 
+<img src="snake.gif" width="400" height="500"/>
 
 
-
-<img src="" width="600" height="350"/>
-
+* apple +5 score
+* wall is a barrier
+* advancing in the game increases the speed (decreases turnDelay variable)
+* win if snake reach lenght of 28 (125 score)
 
 
 # Acknowledgments
